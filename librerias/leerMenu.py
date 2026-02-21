@@ -1,3 +1,4 @@
+#1.2 Lógica de pedido
 import pandas as pd
 
 RUTA_CSV="datos/productos.csv"
