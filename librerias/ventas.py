@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 #1.2 Lógica de pedido
 RUTA_CSV="datos/productos.csv"
@@ -16,11 +17,14 @@ while True:
         break
     pedido.append(producto)
 
-#print(pedido)
-
 #1.3 Procesado de la venta
-total = df_menu.loc[pedido, "Precio"].sum()
-print(total)
-#for id in pedido:
- #   precio=df_menu[df_menu["id"]==id]
-  #  print(precio)
+subtotal=df_menu.loc[pedido, "Precio"].sum()
+iva=subtotal*0.10
+total=subtotal+iva
+
+ticket = {
+    "productos": "nombre",
+    "subtotal": round(subtotal, 2),
+    "iva": round(iva, 2),
+    "total": round(total, 2)
+}
