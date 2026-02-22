@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import logging
 from datetime import datetime
+import os
 
 
 
@@ -18,18 +19,31 @@ if not ventas_logger.hasHandlers():
     ventas_logger.addHandler(handler)
     ventas_logger.setLevel(logging.INFO)
 
+ventas_logger.propagate = False #Hace que solo se registre en ventas.log y no en panel.log
+
 
 #1.2 Logica de pedido
 def leerMenu():
+    #2.4 Gestion de errores y logs
+    if not os.path.exists(RUTA_CSV):
+        mensaje = f"Error: No se encuentra el archivo {RUTA_CSV}"
+        print(mensaje)
+        ventas_logger.error(mensaje)
+        return None
+
     df_menu=pd.read_csv(RUTA_CSV, sep=SEPARADOR, decimal=",")
     df_menu.set_index("id", inplace=True)
     return df_menu
 
 
 def hacerPedido():
-    print(leerMenu())  #imprime el menu segun el csv
-    pedido=[]          #inicializa una lista para guardar los id del pedido
-    producto=0         #inicializa variable para el bucle
+    df_menu=leerMenu()  
+
+    if df_menu is None:
+        return []
+    
+    print(df_menu)  #imprime el menu segun el csv
+    pedido=[]       #inicializa una lista para guardar los id del pedido
 
     while True:
         producto=int(input("Pide un producto: (-1 para salir) "))
