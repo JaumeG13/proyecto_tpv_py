@@ -1,42 +1,67 @@
 import pandas as pd
 import json
+import logging
+from datetime import datetime
 
-#1.2 Lógica de pedido
+
 RUTA_CSV="datos/productos.csv"
 SEPARADOR=";"
+RUTA_TICKET="datos/ticket.json"
+RUTA_LOG="logs/ventas.log"
 
-df_menu=pd.read_csv(RUTA_CSV, sep=SEPARADOR, decimal=",")
-df_menu.set_index("id", inplace=True)
 
-print(df_menu)      #imprime el menu segun el csv
-pedido=[]           #inicializa una lista para guardar los id del pedido
-producto=0          #inicializa variable para el bucle
+#1.2 Logica de pedido
+def leerMenu():
+    df_menu=pd.read_csv(RUTA_CSV, sep=SEPARADOR, decimal=",")
+    df_menu.set_index("id", inplace=True)
+    return df_menu
 
-while True:
-    producto=int(input("Pide un producto: (-1 para salir) "))
-    if producto == -1:  #si el pedido es -1 cierra el bucle, antes de añadirlo a la lista
-        break
-    
-    if producto in df_menu.index:  #si el producto existe en el menu lo añade a la lista, si no, muestra un mensaje de error
+
+def hacerPedido():
+    print(leerMenu())  #imprime el menu segun el csv
+    pedido=[]          #inicializa una lista para guardar los id del pedido
+    producto=0         #inicializa variable para el bucle
+
+    while True:
+        producto=int(input("Pide un producto: (-1 para salir) "))
+        if producto == -1:  #si el pedido es -1 cierra el bucle, antes de añadirlo a la lista
+            break
         pedido.append(producto)
-    else:
-        print("Producto no disponible")
+    
+    return pedido
+
 
 #1.3 Procesado de la venta
-productos_seleccionados=df_menu.loc[pedido]
+def procesarVenta(pedido):
+    df_menu=leerMenu()
+    productos_seleccionados=df_menu.loc[pedido]
 
-subtotal=productos_seleccionados["Precio"].sum()
-iva=subtotal*0.10
-total=subtotal+iva
+    total=productos_seleccionados["Precio"].sum()
+    iva=total*0.10
+    subtotal=total-iva
 
-ticket = {
-    "productos": productos_seleccionados.reset_index().to_dict(orient="records"),
-    "subtotal": round(subtotal, 2),
-    "iva": round(iva, 2),
-    "total": round(total, 2)
-}
+    ticket = {
+        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "productos": productos_seleccionados.reset_index().to_dict(orient="records"),
+        "subtotal": round(subtotal, 2),
+        "iva": round(iva, 2),
+        "total": round(total, 2)
+    }
 
-with open("ticket.json", "w") as f:
-    json.dump(ticket, f, indent=4)
+    return ticket
 
-print("Ticket guardado correctamente.")
+
+def guardarTicket(ticket):
+    with open(RUTA_TICKET, "w", encoding="utf-8") as f:
+        json.dump(ticket, f, indent=4, ensure_ascii=False)
+
+
+#1.4 Registro de venta
+def registrarLog(total):
+    logging.basicConfig(
+        filename=RUTA_LOG,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+
+    logging.info(f"Venta realizada con exito. Total: {total}€")
