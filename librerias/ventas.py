@@ -4,9 +4,19 @@ import logging
 from datetime import datetime
 
 
-RUTA_CSV="datos/productos.csv"
-SEPARADOR=";"
-RUTA_LOG="logs/ventas.log"
+
+RUTA_CSV = "datos/productos.csv"
+SEPARADOR = ";"
+RUTA_LOG = "logs/ventas.log"
+
+#Logs para ventas (1.4)
+ventas_logger = logging.getLogger("ventas")
+if not ventas_logger.hasHandlers():
+    handler = logging.FileHandler(RUTA_LOG, encoding="utf-8")
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    ventas_logger.addHandler(handler)
+    ventas_logger.setLevel(logging.INFO)
 
 
 #1.2 Logica de pedido
@@ -60,10 +70,4 @@ def guardarTicket(ticket):
 
 #1.4 Registro de venta
 def registrarLog(total):
-    logging.basicConfig(
-        filename=RUTA_LOG,
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s"
-    )
-
-    logging.info(f"Venta realizada con exito. Total: {total} EUR")
+    ventas_logger.info(f"Venta realizada con exito. Total: {total} EUR")
