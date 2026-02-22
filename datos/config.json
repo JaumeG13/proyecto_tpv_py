@@ -1,0 +1,18 @@
+{
+    "password": "12345",
+    "nombre_pizzeria": "Pizzería El Horno",
+    "ubicaciones": {
+        "ubi_1": {
+            "calle": "C/ Camino Viejo de Vélez",
+            "numero": 16,
+            "cod_postal": 29700,
+            "localidad": "Vélez-Málaga"
+        },
+        "ubi_2": {
+            "calle": "C/ del Mar",
+            "numero": 74,
+            "cod_postal": 29740,
+            "localidad": "Torre del Mar"
+        }
+    }
+}
