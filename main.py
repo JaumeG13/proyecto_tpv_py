@@ -2,7 +2,6 @@ from librerias.ventas import hacerPedido, procesarVenta, guardarTicket, registra
 from librerias.panel import accesoPanel, estadisticas, nombre_pizzeria
 
 
-
 def main():
     while True:
         print(f"------- TPV {nombre_pizzeria} -------")
@@ -36,5 +35,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# Fin de la estructura lógica
