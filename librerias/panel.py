@@ -23,6 +23,7 @@ logging.basicConfig(
 )
 
 
+#2.2 Seguridad del panel de administracion
 def accesoPanel():
     contador=0
     while contador < 3:
