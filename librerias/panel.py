@@ -6,11 +6,11 @@ RUTA_LOG="logs/panel.log"
 
 #Conseguir valor de la contraseña
 with open(RUTA_JSON, "r", encoding="utf-8") as f:
-    config = json.load(f)
-password = config["password"]
-print(password)
+    config=json.load(f)
+password=config["password"]
+nombre_pizzeria=config["nombre_pizzeria"]
 
-#Log de inicio de sesión
+#Logging inicio de sesión
 logging.basicConfig(
     filename=RUTA_LOG,
     level=logging.INFO,
@@ -18,13 +18,14 @@ logging.basicConfig(
     encoding="utf-8"
 )
 
-def acceso():
+def accesoPanel():
     contador=0
     while contador < 3:
         intento=input("Introduzca la contraseña de acceso: ")
         if intento == password:
             print("Acceso concedido.")
             logging.info("Inicio de sesión correcto.")
+            print(f"---------- {nombre_pizzeria} ----------")
             return True
 
         contador+=1
@@ -32,4 +33,3 @@ def acceso():
 
     logging.error("Inicio de sesión fallido después de 3 intentos.")
 
-acceso()
