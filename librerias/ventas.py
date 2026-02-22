@@ -6,7 +6,6 @@ from datetime import datetime
 
 RUTA_CSV="datos/productos.csv"
 SEPARADOR=";"
-RUTA_TICKET="datos/ticket.json"
 RUTA_LOG="logs/ventas.log"
 
 
@@ -52,7 +51,10 @@ def procesarVenta(pedido):
 
 
 def guardarTicket(ticket):
-    with open(RUTA_TICKET, "w", encoding="utf-8") as f:
+    timestamp=datetime.now().strftime("%Y%m%d_%H%M%S")
+    nombre_archivo=f"datos/ticket_{timestamp}.json"
+
+    with open(nombre_archivo, "w", encoding="utf-8") as f:
         json.dump(ticket, f, indent=4, ensure_ascii=False)
 
 
@@ -64,4 +66,4 @@ def registrarLog(total):
         format="%(asctime)s - %(levelname)s - %(message)s"
     )
 
-    logging.info(f"Venta realizada con exito. Total: {total}€")
+    logging.info(f"Venta realizada con exito. Total: {total} EUR")
